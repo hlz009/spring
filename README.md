@@ -1,6 +1,3 @@
 # spring
-spring配置相关
+spring配置相关及相关代码示例
 
-
-demojdbc  单数据源配置</br>
-demo-muti-jdbc 多数据源配置及事务配置
