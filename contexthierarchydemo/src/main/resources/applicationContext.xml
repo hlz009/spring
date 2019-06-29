@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+<!--  开启子上下文 -->
+    <aop:aspectj-autoproxy/> 
+    <!--  * 子上下文（child Application Context）
+    * (Servlet WebApplicationContext )
+        委托机制：在自己的 context 中找不到 bean，会委托父 context 查找该 bean。
+    -->
+    <bean id="testBeanX" class="com.xz.contexthierarchydemo.context.TestBean">
+        <constructor-arg name="context" value="ChildBean" />
+    </bean>
+
+<!-- 当父上下文定义了bean，子上下文就不需要定义了 -->
+<!--     <bean id="fooAspect" class="com.xz.contexthierarchydemo.foo.FooAspect" /> -->
+</beans>
