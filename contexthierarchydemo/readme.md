@@ -38,3 +38,5 @@ testBeanX(bar) 被增强。
 2. 父上下文和子上下文，均要开启 aop 的增加，即 @EnableAspectJAutoProxy 或<aop: aspectj-autoproxy /> 的支持。
 
 此原理类似于ClassLoader委托加载机制
+补充：spring中提供两种上下文，Servlet WebapplicationContext （主要包含controller, view resolvers and other web-related beans）和 root webApplicationContext(主要包 middle-tier services，datasources) 
+
