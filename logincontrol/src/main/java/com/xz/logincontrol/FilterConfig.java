@@ -12,7 +12,8 @@ import com.xz.logincontrol.filter.QueueKickOutFilter;
 
 @Configuration
 public class FilterConfig {
-	@ConditionalOnProperty(value = {"queue-filter.enabled"})
+//	@ConditionalOnProperty(value = {"queue-filter.enabled"})
+	@ConditionalOnProperty(prefix="queue-filter",name = "enabled", havingValue = "true")
 	@Bean
 	public KickOutFilter queueKickOutFilter() {
 		return new QueueKickOutFilter();

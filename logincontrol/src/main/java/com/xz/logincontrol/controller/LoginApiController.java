@@ -23,14 +23,14 @@ public class LoginApiController {
     }
 
     @GetMapping("user/info")
-    public ApiResult info() {
-        return new ApiResult(200, null, CurrentUser.get());
+    public UserBO info() {
+        return CurrentUser.get();
     }
 
     @PostMapping("logout")
-    public ApiResult logout(@RequestHeader("Authorization") String jwt) {
+    public void logout(@RequestHeader("Authorization") String jwt) {
         userService.logout(jwt);
-        return new ApiResult(200, "成功", null);
+//        return new ApiResult(200, "成功", null);
     }
 
 }

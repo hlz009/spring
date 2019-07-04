@@ -12,7 +12,7 @@ import lombok.ToString;
 public class ApiResult implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private Integer code;
+	private int code;
     private String message;
     private Object data;
 }
