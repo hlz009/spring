@@ -24,6 +24,7 @@ public class LoginApiController {
 
     @GetMapping("user/info")
     public UserBO info() {
+//    	throw new RuntimeException("1111111111111");
         return CurrentUser.get();
     }
 

@@ -1,6 +1,7 @@
 package com.xz.logincontrol.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,14 +13,13 @@ import com.xz.logincontrol.filter.ApiResult;
 public class ExceptionAdvisor {
 	@ResponseBody
 	@ExceptionHandler(value=Exception.class)
-	@ResponseStatus
+//	@ResponseStatus // 该注解加上会默认加上500的错误
 	public ApiResult exceptionHandler(Exception e) {
 		return new ApiResult(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);
 	}
 
 	@ResponseBody
 	@ExceptionHandler(value=RuntimeException.class)
-	@ResponseStatus
 	public ApiResult formatCheckExceptionHandler(RuntimeException e) {
 		return new ApiResult(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);
 	}

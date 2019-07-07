@@ -13,6 +13,6 @@ public class ApiResult implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	private int code;
-    private String message;
+    private String msg;
     private Object data;
 }
