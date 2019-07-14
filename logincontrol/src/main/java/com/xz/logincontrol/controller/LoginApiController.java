@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xz.logincontrol.constant.enums.CommonResponseEnum;
+import com.xz.logincontrol.exception.assertion.BusinessExceptionAssert;
 import com.xz.logincontrol.filter.ApiResult;
 import com.xz.logincontrol.pojo.CurrentUser;
 import com.xz.logincontrol.pojo.UserBO;
@@ -24,7 +26,7 @@ public class LoginApiController {
 
     @GetMapping("user/info")
     public UserBO info() {
-//    	throw new RuntimeException("1111111111111");
+    	CommonResponseEnum.SERVER_BUSY.assertFail();
         return CurrentUser.get();
     }
 

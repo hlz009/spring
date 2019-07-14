@@ -6,6 +6,7 @@ Redis + Redisson
 
 JWT（token）存储在Redis中，类似 JSessionId-Session的关系，用户登录后每次请求在Header中携带jwt
 
+提供统一的异常拦截机制
 
 
 ==================================================================

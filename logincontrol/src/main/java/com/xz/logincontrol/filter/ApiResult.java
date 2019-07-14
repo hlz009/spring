@@ -15,4 +15,9 @@ public class ApiResult implements Serializable{
 	private int code;
     private String msg;
     private Object data;
+    
+    public ApiResult(int code, String msg) {
+    	this.code = code;
+    	this.msg = msg;
+    }
 }
