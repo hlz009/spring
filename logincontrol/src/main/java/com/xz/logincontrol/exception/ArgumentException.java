@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import com.xz.logincontrol.constant.IResponseEnum;
 
+import lombok.Getter;
+
 /**
  * 参数异常
  * 在处理业务过程中校验参数出现错误，可以抛出该异常
@@ -11,8 +13,8 @@ import com.xz.logincontrol.constant.IResponseEnum;
  * @author xiaozhi009
  *
  */
+@Getter
 public class ArgumentException extends BaseException implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	public ArgumentException(IResponseEnum responseEnum, Object[] args, String msg) {

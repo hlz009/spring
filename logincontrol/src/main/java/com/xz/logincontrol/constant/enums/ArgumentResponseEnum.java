@@ -1,6 +1,6 @@
 package com.xz.logincontrol.constant.enums;
 
-import com.xz.logincontrol.exception.assertion.CommonExceptionAssert;
+import com.xz.logincontrol.exception.assertion.ArgumentExceptionAssert;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ArgumentResponseEnum implements CommonExceptionAssert {
+public enum ArgumentResponseEnum implements ArgumentExceptionAssert {
 	VALID_ERROR(6000, "参数校验异常");
 
 	private int code;

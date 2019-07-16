@@ -100,8 +100,6 @@ public class ExceptionAdvisor {
             TypeMismatchException.class,
             HttpMessageNotReadableException.class,
             HttpMessageNotWritableException.class,
-            // BindException.class,
-            // MethodArgumentNotValidException.class
             ServletRequestBindingException.class,
             ConversionNotSupportedException.class,
             MissingServletRequestPartException.class,
@@ -136,7 +134,8 @@ public class ExceptionAdvisor {
     @ResponseBody
     public ApiResult handleBindException(BindException e) {
         log.error("参数绑定校验异常", e);
-        return wrapperBindingResult(e.getBindingResult());
+        return new ApiResult(ArgumentResponseEnum.VALID_ERROR.getCode(), ArgumentResponseEnum.VALID_ERROR.getMsg(), 
+        		e.getBindingResult());
     }
 
     /**
@@ -145,30 +144,42 @@ public class ExceptionAdvisor {
      * @param e 异常
      * @return 异常结果
      */
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    @ExceptionHandler(value = {
+    		MethodArgumentNotValidException.class,
+    		})
     @ResponseBody
     public ApiResult handleValidException(MethodArgumentNotValidException e) {
         log.error("参数绑定校验异常", e);
-        return wrapperBindingResult(e.getBindingResult());
+        return new ApiResult(ArgumentResponseEnum.VALID_ERROR.getCode(), ArgumentResponseEnum.VALID_ERROR.getMsg(), 
+        		e.getBindingResult());
     }
 
+    @ExceptionHandler(value = {
+    		ArgumentException.class,
+    		})
+    @ResponseBody
+    public ApiResult handleValidException(ArgumentException e) {
+        log.error("参数校验异常", e);
+        return new ApiResult(e.getResponseEnum().getCode(), e.getResponseEnum().getMsg(), 
+        		wrapperBindingResult((BindingResult) e.getArgs()[0]));
+    }
+    
     /**
      * 包装绑定异常结果
      *
      * @param bindingResult 绑定结果
      * @return 异常结果
      */
-    private ApiResult wrapperBindingResult(BindingResult bindingResult) {
-        StringBuilder msg = new StringBuilder();
-
+    private String wrapperBindingResult(BindingResult bindingResult) {
+        StringBuilder data = new StringBuilder();
         for (ObjectError error : bindingResult.getAllErrors()) {
-            msg.append(", ");
+        	data.append(", ");
             if (error instanceof FieldError) {
-                msg.append(((FieldError) error).getField()).append(": ");
+            	data.append(((FieldError) error).getField()).append(": ");
             }
-            msg.append(error.getDefaultMessage() == null ? "" : error.getDefaultMessage());
+            data.append(error.getDefaultMessage() == null ? "" : error.getDefaultMessage());
         }
-        return new ApiResult(ArgumentResponseEnum.VALID_ERROR.getCode(), msg.substring(2));
+        return data.substring(2);
     }
 
     /**
