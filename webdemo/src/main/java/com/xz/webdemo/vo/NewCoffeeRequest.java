@@ -1,5 +1,7 @@
 package com.xz.webdemo.vo;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +14,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class NewCoffeeRequest {
+public class NewCoffeeRequest implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@NotEmpty
 	private String name;
 	@NotNull
