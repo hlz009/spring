@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,7 +57,7 @@ public class CoffeeApiController {
 
 	@PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Coffee addCoffeeWithoutBindingResult(@Valid NewCoffeeRequest newCoffee) {
+	public Coffee addCoffeeWithoutBindingResult(@Valid @RequestBody NewCoffeeRequest newCoffee) {
 		return coffeeService.saveCoffee(newCoffee.getName(), newCoffee.getPrice());
 	}
 
