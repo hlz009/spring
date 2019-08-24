@@ -1,0 +1,2 @@
+redis存储session和cache
+使用spring-cache和spring-session
