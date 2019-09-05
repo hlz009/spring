@@ -12,12 +12,16 @@ import com.xz.webdemo.mode.CoffeeOrder;
 import com.xz.webdemo.mode.OrderState;
 import com.xz.webdemo.resposity.CoffeeOrderRepository;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.binder.MeterBinder;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @Slf4j
-public class CoffeeOrderService {
+public class CoffeeOrderService implements MeterBinder {
+	private Counter orderCounter = null; //监控计数
 	@Autowired
     private CoffeeOrderRepository orderRepository;
 
@@ -32,6 +36,7 @@ public class CoffeeOrderService {
                 .state(OrderState.INIT)
                 .build();
         CoffeeOrder saved = orderRepository.save(order);
+        orderCounter.increment(); // 简单监控统计订单数
         log.info("New Order: {}", saved);
         return saved;
     }
@@ -46,4 +51,9 @@ public class CoffeeOrderService {
         log.info("Updated Order: {}", order);
         return true;
     }
+
+	@Override
+	public void bindTo(MeterRegistry meterRegistry) {
+		this.orderCounter = meterRegistry.counter("order.count");
+	}
 }

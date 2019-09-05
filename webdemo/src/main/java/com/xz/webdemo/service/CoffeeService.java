@@ -34,4 +34,8 @@ public class CoffeeService {
     public List<Coffee> getCoffeeByName(List<String> names) {
     	return coffeeRepository.findByNameInOrderById(names);
     }
+
+    public Long getCoffeeCount() {
+    	return coffeeRepository.count();
+    }
 }

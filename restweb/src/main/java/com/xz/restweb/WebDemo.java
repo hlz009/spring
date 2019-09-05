@@ -1,38 +1,48 @@
 package com.xz.restweb;
 
 import java.net.URI;
+import java.security.KeyStore;
 import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.xz.restweb.model.Coffee;
-import com.xz.restweb.support.CustomConnectionKeepAliveStrategy;
 
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 
 @Slf4j
 @Component
 public class WebDemo implements CommandLineRunner {
 
+	@Value("${security.key-store}")
+	private Resource keyStore;
+	@Value("${security.key-pass}")
+	private String keyPass;
+    @Value("${service.url}")
+    private String url;
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -40,21 +50,48 @@ public class WebDemo implements CommandLineRunner {
 	 * httpclient连接池
 	 * @return
 	 */
-	@Bean
-	public HttpComponentsClientHttpRequestFactory requestFactory() {
-		PoolingHttpClientConnectionManager connectionManager = 
-				new PoolingHttpClientConnectionManager(30, TimeUnit.SECONDS);
-		connectionManager.setMaxTotal(200);
-		connectionManager.setDefaultMaxPerRoute(20);
+//	@Bean
+//	public HttpComponentsClientHttpRequestFactory requestFactory() {
+//		PoolingHttpClientConnectionManager connectionManager = 
+//				new PoolingHttpClientConnectionManager(30, TimeUnit.SECONDS);
+//		connectionManager.setMaxTotal(200);
+//		connectionManager.setDefaultMaxPerRoute(20);
+//
+//		CloseableHttpClient httpClient = HttpClients.custom()
+//							.setConnectionManager(connectionManager)
+//							.evictIdleConnections(30, TimeUnit.SECONDS)
+//							.disableAutomaticRetries() // 舍弃自动重连
+//							.setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy())
+//							.build();
+//		return new HttpComponentsClientHttpRequestFactory(httpClient);
+//	}
 
-		CloseableHttpClient httpClient = HttpClients.custom()
-							.setConnectionManager(connectionManager)
-							.evictIdleConnections(30, TimeUnit.SECONDS)
-							.disableAutomaticRetries() // 舍弃自动重连
-							.setKeepAliveStrategy(new CustomConnectionKeepAliveStrategy())
-							.build();
-		return new HttpComponentsClientHttpRequestFactory(httpClient);
+	/**
+	 * httpclient连接池
+	 * 支持 https协议
+	 * @return
+	 */
+	@Bean
+	public ClientHttpRequestFactory requestFactory() {
+		OkHttpClient okHttpClient = null;
+		try {
+			KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			keyStore.load(this.keyStore.getInputStream(), keyPass.toCharArray());
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			tmf.init(keyStore);
+			SSLContext sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, tmf.getTrustManagers(), null);
+
+			okHttpClient = new OkHttpClient.Builder()
+					.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) tmf.getTrustManagers()[0])
+					.hostnameVerifier((hostname, session) -> true)
+					.build();
+		} catch (Exception e) {
+			log.error("Exception occurred!", e);
+		}
+		return new OkHttp3ClientHttpRequestFactory(okHttpClient);
 	}
+	
 	
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -71,6 +108,19 @@ public class WebDemo implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 //		test1();
+//		test2();
+		test3();
+	}
+
+	private void test3() {
+        ParameterizedTypeReference<List<Coffee>> ptr =
+                new ParameterizedTypeReference<List<Coffee>>() {};
+        ResponseEntity<List<Coffee>> list = restTemplate
+                .exchange(url + "/coffee/", HttpMethod.GET, null, ptr);
+        list.getBody().forEach(c -> log.info("Coffee: {}", c));
+	}
+
+	private void test2() {
 		URI uri = UriComponentsBuilder
 				.fromUriString("http://localhost:8080/coffee/?name={name}")
 				.build("mocha");
