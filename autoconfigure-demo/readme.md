@@ -1,4 +1,4 @@
-本实例演示springboot的自定义自动配置<br/>
+## 本实例演示springboot的自定义自动配置<br/>
 引入的module包 
 greeting
 greeting-autoconfigure <br/>
