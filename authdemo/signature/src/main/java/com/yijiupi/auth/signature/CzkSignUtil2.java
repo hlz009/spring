@@ -1,9 +1,9 @@
-package com.xz.auth;
+package com.yijiupi.auth.signature;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import com.htjc.cht.api.util.DigitalSignTool;
+import com.yijiupi.auth.signature.util.DigitalSignTool;
 
 public class CzkSignUtil2 {
 	

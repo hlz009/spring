@@ -1,10 +1,9 @@
-package com.xz.auth;
+package com.yijiupi.auth.signature;
 
 import java.io.IOException;
 import java.util.TreeMap;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -14,9 +13,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.expression.ParseException;
 
 import com.alibaba.fastjson.JSON;
-import com.xz.auth.model.vo.RoleVO;
+import com.yijiupi.auth.signature.model.dto.RoleVO;
 import com.yijiupi.auth.signature.util.EncryptionUtil;
 
 public class TestHttpUtil {
@@ -47,9 +47,9 @@ public class TestHttpUtil {
 		}
 		// 加密
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("admin");
-		buffer.append("|");
 		buffer.append(1L);
+		buffer.append("|");
+		buffer.append("admin");
 		buffer.append("|");
 
 //		String signature = "MIIEfgYJKoZIhvcNAQcCoIIEbzCCBGsCAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCCA0YwggNCMIICKqADAgECAgQQAAACMA0GCSqGSIb3DQEBCwUAMFMxCzAJBgNVBAYTAkNOMQ4wDAYDVQQIDAVIdWJlaTEQMA4GA1UECgwHeWlqaXVwaTEQMA4GA1UECwwHSHVhc2hhbjEQMA4GA1UEAwwHeGlhb3poaTAeFw0xOTEyMDUwNzQ1MzRaFw0yMDEyMDQwNzQ1MzRaMHoxCzAJBgNVBAYTAkNOMQ4wDAYDVQQIDAVIdWJlaTEQMA4GA1UECgwHeWlqaXVwaTEQMA4GA1UECwwHSHVhc2hhbjEQMA4GA1UEAwwHeGlhb3poaTElMCMGCSqGSIb3DQEJARYWaHVsaWFuZ3poaUB5aWppdXBpLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA6PV4mtmd8nbkTVDrhtX3wTa0zwHvj+sJhyM0PFXT0uHOZiOIXTLO8YfJ+jFupMmYfzHy5ZD2pOF1FwrZaPCL8cX7WQ0Xbbfn386PWoiOjYYLbsap+1DFOkIw72AhNUUphG6J5ummAn2Xjakn8Lt/ZAl2gHqdEuafAEiaAeuyUjMCAwEAAaN7MHkwCQYDVR0TBAIwADAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFAqGbl3OghFLNmFvMAo/OytSUr4eMB8GA1UdIwQYMBaAFIqjaPq3fwzlqpLklX5HOec6cBKrMA0GCSqGSIb3DQEBCwUAA4IBAQCLOl5bGxv1N/ER0Q0Irf8rXO5mTy3SKjQdnsx5phNefU8SSunjsXKYN4YreFseTtdqxW7yG4wla/pRD4m1OXiEZCPTsx+z52WNHOZ7SxgVlY4V+nSpm8bgFtMqbOoXEAOND9UIb1mGZOwNUAjS4RRA4Q3dUCZo63/c0SKO451GVSIaI/6KClCK6Wf60uKf+wqyQ4+Nnt73+9yMesDoarXc4FSMfLeOF9wENNn9fYWYoiMm5MQR/XFh8vrKaRRqfvH5rcHMWB2kPsI+S7+553lFrPKE7bfZY/nvgdl6iHnhY8AX9SNHiRG6Il28KhgCiK36VPAyW43VPfeF0JoCXMVuMYIBADCB/QIBATBbMFMxCzAJBgNVBAYTAkNOMQ4wDAYDVQQIEwVIdWJlaTEQMA4GA1UEChMHeWlqaXVwaTEQMA4GA1UECxMHSHVhc2hhbjEQMA4GA1UEAxMHeGlhb3poaQIEEAAAAjAJBgUrDgMCGgUAMA0GCSqGSIb3DQEBAQUABIGAgfot8ca1GRIdkytVpTFUwJxL1Tcf7/4G1ry2hC2X2WyZnw4IPhKOVaTv1CGUz2qWhj0s7LlzTZrbbGgerpHeNnxkPevjNeKzWG3C1TH+dJzCgT/yeMn4ufujLYcaxaCCKibRCiU0J0spmeZ+3N+1+iC7VHlw7fHEkxNqWeZGhMk=";

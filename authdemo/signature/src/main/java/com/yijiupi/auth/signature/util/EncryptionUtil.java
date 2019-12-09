@@ -1,4 +1,4 @@
-package com.xz.auth;
+package com.yijiupi.auth.signature.util;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.alibaba.fastjson.JSON;
-import com.htjc.cht.api.util.DigitalSignTool;
 
 /**
  * 签名加密工具类

@@ -1,27 +1,24 @@
-package com.xz.auth;
+package com.yijiupi.auth.signature;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.yijiupi.auth.signature.util.DigitalSignTool;
 
-import com.htjc.cht.api.util.DigitalSignTool;
-
-public class SignUtil {
-	protected Log logger = LogFactory.getLog(getClass());
+public class CzkSignUtil {
+	
 	private DigitalSignTool signerTool = null;
 	private DigitalSignTool checkSignerTool = null;
 
-	public SignUtil() {
+	public CzkSignUtil() {
 		try {
-			logger.info(SignUtil.class.getName()+":"+SignUtil.class.getResource("/"));
-			logger.info(SignUtil.class.getName()+":"+SignUtil.class.getResource("/").getPath());
-			String path = java.net.URLDecoder.decode(SignUtil.class.getResource("/").getPath(), "utf-8");// 证书路径
-			String pfx_file = path + "chongzhika.pfx"; // 商户证书路径
-			String rootCertificatePath = path + "cacert.pem"; // 根证书路径
-			String keyStorePassword = "000000";// 商户证书库密码
-			String keyPassword = "000000";// 商户证书库私钥保护密码
+			//System.out.println(CzkSignUtil.class.getResource("/"));
+			//System.out.println(CzkSignUtil.class.getResource("/").getPath());
+			String path = java.net.URLDecoder.decode(CzkSignUtil.class.getResource("/").getPath(), "utf-8");// 证书路径
+			String pfx_file = path + "TJYXCS.pfx"; // 商户证书路径
+			String rootCertificatePath = path + "cacert2.pem"; // 根证书路径
+			String keyStorePassword = "TJYXCS";// 商户证书库密码
+			String keyPassword = "TJYXCS";// 商户证书库私钥保护密码
 			signerTool = DigitalSignTool.getSigner(pfx_file, keyStorePassword,keyPassword); // 签名工具实例
 			checkSignerTool = DigitalSignTool.getVerifier(rootCertificatePath);// 验签工具实例
 		} catch (GeneralSecurityException e) {
@@ -77,46 +74,42 @@ public class SignUtil {
 	}
 	
 	public static void main(String[] args)throws IOException {
-		SignUtil signToolManage = new SignUtil();// 创建一个实例
+		CzkSignUtil signToolManage = new CzkSignUtil();// 创建一个实例
 		/**
 		*组织报文，报文格式根据文档规定组织
 		*/
-		String admin = "100001";
-		Long id = 1L;
-//		String productNo = "0000001";
-//		String extendParam = "";// 数据不能为null  处理一下null的问题
+		String merchantNo = "100001";
+		String orderNo = "100000000000001";
+		String productNo = "0000001";
+		String extendParam = "";// 数据不能为null
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(admin);
+		buffer.append(merchantNo);
 		buffer.append("|");
-		buffer.append(id);
+		buffer.append(orderNo);
 		buffer.append("|");
-//		buffer.append(productNo);
-//		buffer.append("|");
-//		buffer.append(extendParam);
-//		buffer.append("|");
+		buffer.append(productNo);
+		buffer.append("|");
+		buffer.append(extendParam);
 		String toPayData = buffer.toString();
-	
 		
 		//签名
 		String signData = signToolManage.sign(toPayData);
-		System.out.println(signData);
-		
 		if (null == signData) {
 			throw new RuntimeException("签名失败");
 		}
 		
 		//验签
 		try {
-			new SignUtil().verifySign(signData, toPayData, null);
+			new CzkSignUtil().verifySign(signData, toPayData, null);
 			System.out.println("验签成功！");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("验签失败！");
 		}
 
-//		/**
-//		*如果是通过HttpClient工具发送HTTP请求
-//		*/
+		/**
+		*如果是通过HttpClient工具发送HTTP请求
+		*/
 //		HttpClient client = new HttpClient();
 //		PostMethod method = new PostMethod("http://localhost:8080/czk_jyhx_outer/czkjy/testSgin");
 //		method.addParameter("merchantNo", merchantNo);
